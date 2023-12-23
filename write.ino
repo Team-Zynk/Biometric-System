@@ -12,7 +12,19 @@ void write1(){
   dataFile=SD.open(fileName,FILE_APPEND);
   dataFile.println(present_date);
   dataFile.close();
+  String fileName="/"+(String)roll+"/"+"Days Present"+".txt"; //Directory of Roll No. with file name as Days Present
+  dataFile = SD.open(fileName,FILE_READ);
+  String line = dataFile.readStringUntil('\n');
+  int present_days= line.toInt();
+  present_days+=1;
+  dataFile.close();
+  SD.remove(fileName);
+  dataFile=SD.open(fileName,FILE_APPEND);
+  dataFile.println(present_date);
+  dataFile.close();
   
+
+
   tft.setCursor(40,160);
   tft.setTextColor(TFT_BLUE);
   tft.setTextSize(3);
