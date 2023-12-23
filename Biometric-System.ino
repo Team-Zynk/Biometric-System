@@ -146,16 +146,13 @@ const char* host = "arduino.php5.sk"; //external server domain for HTTP connecti
 struct tm oldtime;
 Buttons b1=Buttons(2,TFT_SKYBLUE,TFT_BLACK);
 Buttons b2 =Buttons(2,TFT_SKYBLUE,TFT_BLACK);
-Buttons b3=Buttons(3,TFT_GREEN,TFT_BLACK);
-Buttons b4=Buttons(1,TFT_BLACK,TFT_WHITE);
 
 int admin[10];
 int roll=-1;
 int k=1;
-void printLocalTime()
+void printLocalTime() //print the local time once sync with wifi
 { tft.setTextSize(2);
   tft.setCursor(40,280);
-  
   struct tm timeinfo;
   if(!getLocalTime(&timeinfo)){
     Serial.println("Failed to obtain time");
@@ -177,82 +174,71 @@ String stringgen(int x){       //to generate string for a given column number in
   return ans;
 }
 
+void printer(String txt,uint16_t x,uint16_t y,uint16_t s,uint16_t ln,uint16_t color)
+{ // print center aligned text
+tft.setCursor(x+(ln-tft.textWidth(txt))/2,y);
+tft.setTextSize(s);
+tft.setTextColor(color);
+tft.print(txt);
+}
 
 
-Adafruit_Fingerprint finger = Adafruit_Fingerprint(&SerialPort);
+Adafruit_Fingerprint finger = Adafruit_Fingerprint(&SerialPort); //Serialport 2 given to fingerprint 
 void setup() {
-  // put your setup code here, to run once:
   Serial.begin(115200);
   SerialPort.begin(57600,Serial1,16,17);
-  delay(10);
-  delay(5000);
-  digitalWrite(22, HIGH); // Touch controller chip select (if used)
-  digitalWrite(15, HIGH); // TFT screen chip select
+  delay(1000);
+  digitalWrite(22, HIGH); 
+  digitalWrite(15, HIGH);
   digitalWrite( 5, HIGH);
-  WiFi.disconnect(true);
+  WiFi.disconnect(true);   //Disconnect wifi
   WiFi.mode(WIFI_OFF);
   tftreset();
   tft.begin();
   tft.init();
   tft.setSwapBytes(true);
-  tft.setRotation(1);
+  tft.setRotation(1);            //Set Rotation to landscape
   tft.fillScreen(TFT_WHITE);
   tft.setTextSize(4);
-  
-  
-  digitalWrite(5, HIGH); 
+  digitalWrite(5, HIGH);
     if (!SD.begin()) {
-    tft.setTextSize(2);
-    tft.setTextColor(TFT_RED);
-    tft.setCursor(100,40);
-    tft.println("Card Mount Failed");
+    printer("SD card mount failed",100,40,2,460,TFT_RED);
+    delay(1000);
     return;
   }
      uint8_t cardType = SD.cardType();
 
   if (cardType == CARD_NONE) {
-    tft.setTextSize(2);
-    tft.setTextColor(TFT_RED);
-    tft.setCursor(100,40);
-    tft.println("No SD card attached");
+    printer("No SD card attatched",100,40,2,460,TFT_RED);
+    delay(1000);
     return;
   }
-   Serial.println("\n\nAdafruit finger detect test");
 
-   drawSdJpeg("/iitlogo.jpg", 80, 60);
-   tft.setTextSize(4);
-  tft.setCursor((480-tft.textWidth("INITIALIZATION..."))/2,30);
-  tft.setTextColor(TFT_BLUE);
-  tft.println("INITIALIZATION...");
-  delay(700);     // This draws a jpeg pulled off the SD Card
-  google(14);
-  // WiFi.disconnect(true);
-  // WiFi.mode(WIFI_OFF); 
-  // tftreset();
+  drawSdJpeg("/iitlogo.jpg", 80, 60);  // This draws a jpeg pulled off the SD Card
+   printer("INITIALIZATION",30,10,3,460,TFT_BLUE);
+   for(int i=0;i<3;i++){
+    tft.print(". ");
+    delay(500);
+   }
+  delay(500);     
+  google(14);          //update student info file from google sheets
   delay(1000);
-  // set the data rate for the sensor serial port
-  finger.begin(57600);
-  delay(5);
+  
+  finger.begin(57600);     // set the data rate for the sensor serial port
+  delay(100); 
   if (finger.verifyPassword()) {
-    Serial.println("Found fingerprint sensor!");
+   tft.fillScreen(TFT_WHITE);
+   printer("Found Fingerprint Sensor",10,10,3,460,TFT_BLUE);
+   delay(500);
   } else {
-    tft.setTextSize(2);
-    tft.setTextColor(TFT_RED);
-    tft.println("Did not find fingerprint sensor :(");
-    while (1) { delay(1); }
+   tft.fillScreen(TFT_WHITE);
+   printer("Did not find",10,10,3,460,TFT_BLUE);
+   printer("fingerprint sensor",10,60,3,460,TFT_BLUE);
+   delay(1000);
+    return;
   }
 
-  Serial.println(F("Reading sensor parameters"));
-  finger.getParameters();
-  Serial.print(F("Status: 0x")); Serial.println(finger.status_reg, HEX);
-  Serial.print(F("Sys ID: 0x")); Serial.println(finger.system_id, HEX);
-  Serial.print(F("Capacity: ")); Serial.println(finger.capacity);
-  Serial.print(F("Security level: ")); Serial.println(finger.security_level);
-  Serial.print(F("Device address: ")); Serial.println(finger.device_addr, HEX);
-  Serial.print(F("Packet len: ")); Serial.println(finger.packet_len);
-  Serial.print(F("Baud rate: ")); Serial.println(finger.baud_rate);
-
-  finger.getTemplateCount();
+  finger.getTemplateCount();  //get number of fingerprints stored
 
   if (finger.templateCount == 0) {
     Serial.print("Sensor doesn't contain any fingerprint data. Please run the 'enroll' example.");
@@ -443,7 +429,7 @@ int getFingerprintID() {
   return finger.fingerID;
 }
 
-void tftreset(){
+void tftreset(){             //Reset pinmodes of tft after wifi connection breaks/ since they share common pins
   pinMode(TFT_RD, OUTPUT);
   digitalWrite(TFT_RD, HIGH);
    pinMode(TFT_D0, OUTPUT); digitalWrite(TFT_D0, HIGH);
@@ -454,4 +440,3 @@ void tftreset(){
     pinMode(TFT_D5, OUTPUT); digitalWrite(TFT_D5, HIGH);
     pinMode(TFT_D6, OUTPUT); digitalWrite(TFT_D6, HIGH);
     pinMode(TFT_D7, OUTPUT); digitalWrite(TFT_D7, HIGH);
-}

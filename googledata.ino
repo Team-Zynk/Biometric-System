@@ -1,4 +1,4 @@
-void google(uint16_t strength){
+void google(uint16_t strength){           //get student data from sheet
    tft.fillScreen(TFT_WHITE);
    tft.setTextColor(TFT_BLUE);
    tft.setTextSize(3);
@@ -38,18 +38,7 @@ void google(uint16_t strength){
     bool ready = GSheet.ready();
     if (ready && !taskComplete)
     {
-        //For basic FirebaseJson usage example, see examples/FirebaseJson/Create_Edit_Parse/Create_Edit_Parse.ino
-
-        //If you assign the spreadsheet id from your own spreadsheet,
-        //you need to set share access to the Service Account's CLIENT_EMAIL
-
         
-        // String response;
-        // Instead of using FirebaseJson for response, you can use String for response to the functions 
-        // especially in low memory device that deserializing large JSON response may be failed as in ESP8266
-
-        Serial.println("Get spreadsheet values from range...");
-        Serial.println("---------------------------------------------------------------");
         FirebaseJson response;
         String s="Sheet1";
         s=s+"!A"+String(k+1)+":B"+String(k+5);
