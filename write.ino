@@ -4,7 +4,7 @@ void write1(){
   File dataFile;
   struct tm timeinfo;
   getLocalTime(&timeinfo);
-  Sd.mkdir((String)roll);
+  SD.mkdir("/"+(String)roll);
   String fileName="/"+(String)roll+"/"+"Dates Present"+".txt"; //Directory of Roll No. with file name as Dates Present
 
 
@@ -12,7 +12,7 @@ void write1(){
   dataFile=SD.open(fileName,FILE_APPEND);
   dataFile.println(present_date);
   dataFile.close();
-  String fileName="/"+(String)roll+"/"+"Days Present"+".txt"; //Directory of Roll No. with file name as Days Present
+  fileName="/"+(String)roll+"/"+"Days Present"+".txt"; //Directory of Roll No. with file name as Days Present
   dataFile = SD.open(fileName,FILE_READ);
   String line = dataFile.readStringUntil('\n');
   int present_days= line.toInt();
