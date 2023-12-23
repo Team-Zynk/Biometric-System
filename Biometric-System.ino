@@ -1,39 +1,55 @@
-#include "SPI.h"
-#include "TFT_eSPI.h"
+#include "SPI.h"          // Libraries for TFT 3.5" and Touch
+#include "TFT_eSPI.h"       
 #include <TouchScreen.h>
-TFT_eSPI tft = TFT_eSPI();
+TFT_eSPI tft = TFT_eSPI(); //tft variable defined as global 
+ 
+ 
+ 
+bool Touched(boolean showTouch,uint16_t *x,uint16_t *y) {                   // function for touch detection
 
-const int coords[] = {420, 3900, 3600, 570}; // portrait - left, right, top, bottom
-bool Touched(boolean showTouch,uint16_t *x,uint16_t *y);
-void write1();
-class button{
-
+    TouchScreen ts = TouchScreen(4, 33, 32, 15, 300); //touch variable defined 
+    const int coords[] = {420, 3900, 3600, 570};// portrait - left, right, top, bottom          // Coordinates found through calibration
+    TSPoint p = ts.getPoint();
+    pinMode(33, OUTPUT);      //restore shared pins
+    pinMode(32, OUTPUT);
+    digitalWrite(33, HIGH);   //because TFT control pins
+    digitalWrite(32, HIGH);
+    bool pressed = (p.z > 200 && p.z < 20000);
+    if (pressed) {
+          *x = map(p.y, coords[1], coords[0], 0, tft.width());            // these are for landscape could refer TouchScreen.h for portrait
+          *y = map(p.x, coords[2], coords[3], 0, tft.height()); 
+    if (showTouch) tft.fillCircle(*x, *y, 2, TFT_WHITE);             //showtouch true for showing marks at touch
+      return true;
+    }
+    return false;
+}
+void write1();                // attendance mark function declared
+class button{                 // button class to form round rectangular buttons
   public:
-  int ln;
-  int wd;
-  int s;
-  int x;
-  int y;
-  String txta;
-  String txtb;
-  uint16_t bgc;
-  uint16_t tc;
+  int ln;    //length  (left to right)
+  int wd;    //width    (top to bottom)
+  int s;     //text size
+  int x;     // top left x  [0,480] for our case in landscape
+  int y;     // top left y  [0,320] for our case in landscape
+  String txta;  //first word
+  String txtb;  //second word
+  uint16_t bgc; // background colour of button
+  uint16_t tc;  // text colour of button
   button(){
     
   }
-  button(int x1,int y1,int s1,String txta1,String txtb1,int ln1,uint16_t bgc1,uint16_t tc1){
+  button(int x1,int y1,int s1,String txta1,String txtb1,int ln1,uint16_t bgc1,uint16_t tc1){  //constructor
   x=x1;
   y=y1;
   s=s1;
   ln=ln1;
   txta=txta1;
   txtb=txtb1;
-  
-  wd=26*s;
+  wd=26*s;                  //height according to text size since it is tedious to get 26*s everytime
   bgc=bgc1;
   tc=tc1;
   }
-  void display(){
+  void display(){                             // to display text and button move to next line for two words
     tft.fillRoundRect(x,y,ln,wd,wd/4,bgc);
     tft.setTextColor(tc);
     tft.setTextSize(s);
@@ -47,20 +63,20 @@ class button{
       tft.println(txtb);
     }
   } 
-  bool check(int x1, int y1){
+  bool check(int x1, int y1){                 //check if this buttonwas pressed
     return (x1<x+ln && x1>x && y1<y+wd && y1>y);
   }
 };
 
-class Buttons{
+class Buttons{                // container for multiple buttons on same screen
  private:
  int ln=0;
  public:
- int n;
+ int n;                       // number of buttons
  int s;
  uint16_t bgc;
  uint16_t tc;
- button stk[12];
+ button stk[12];              // since a maximum of 12 buttons was required // can be changed for more
 
  Buttons(int s1,uint16_t bgc1,uint16_t tc1){
   s=s1;
@@ -68,12 +84,12 @@ class Buttons{
   tc=tc1;
   ln=0;
  }
- void displayall(){
+ void displayall(){         // display all buttons
   for(int i=0;i<n;i++){
     stk[i].display();
   }
  }
- int checkpress(int x,int y){
+ int checkpress(int x,int y){   // check button that was pressed
   for(int i=0;i<n;i++){
     if(stk[i].check(x,y)){
       return i;
@@ -83,7 +99,7 @@ class Buttons{
  }
 
 
- void insert(int x1,int y1,String txt1){
+ void insert(int x1,int y1,String txt1){         //to insert a new button with top left coordinates x,y with text txt1 (Could contain two words)
   String txta="";
   String txtb="";
   int i=0;
@@ -98,11 +114,11 @@ class Buttons{
    txta=txta+txt1[i];
    i++;
   }
-  int ln1;
-   if(tft.textWidth(txta)>tft.textWidth(txtb)){
-    ln1=(2*tft.textWidth(txta))/3;
+  int ln1;                                          
+   if(tft.textWidth(txta)>tft.textWidth(txtb)){          //to get a standard size as max of all size of buttons
+    ln1=tft.textWidth(txta);
    }else{
-    ln1=(2*tft.textWidth(txtb)/3);
+    ln1=tft.textWidth(txtb);
    }
    if(ln1>ln){
     ln=ln1;
@@ -115,26 +131,24 @@ class Buttons{
  }
 };
 
- //  in rotation order - portrait, landscape, etc
- // can be a digital pin
 #include <WiFi.h> //Wifi library
-#include "esp_wpa2.h"
-#include "time.h"
+#include "esp_wpa2.h"  //wpa2 library for connections to Enterprise networks like IITD_WiFi
+#include "time.h" //time library
 #include <FS.h>
-#include <SD.h>
-#include <JPEGDecoder.h> //wpa2 library for connections to Enterprise networks
+#include <SD.h>  //SD card library
+#include <JPEGDecoder.h> 
 #include <Arduino.h>
 #include <Adafruit_Fingerprint.h>
 #include <HardwareSerial.h>
-#include <ESP_Google_Sheet_Client.h>
-HardwareSerial SerialPort(2);
+#include <ESP_Google_Sheet_Client.h> // Configures JSON objects to post on google sheets
+HardwareSerial SerialPort(2);       // serial port for fingerprint sensor
 const char* host = "arduino.php5.sk"; //external server domain for HTTP connection after authentification
 struct tm oldtime;
 Buttons b1=Buttons(2,TFT_SKYBLUE,TFT_BLACK);
 Buttons b2 =Buttons(2,TFT_SKYBLUE,TFT_BLACK);
 Buttons b3=Buttons(3,TFT_GREEN,TFT_BLACK);
 Buttons b4=Buttons(1,TFT_BLACK,TFT_WHITE);
-TouchScreen ts = TouchScreen(4, 33, 32, 15, 300);
+
 int admin[10];
 int roll=-1;
 int k=1;
@@ -154,7 +168,14 @@ void printLocalTime()
   }
 }
 
-String stringgen(int x);
+String stringgen(int x){       //to generate string for a given column number in google sheets
+  String ans="";
+  while(x!=0){
+    ans=String((char(((x-1)%26)+'A')))+ans;
+    x=(x-1)/26;
+  }
+  return ans;
+}
 
 
 
@@ -179,7 +200,7 @@ void setup() {
   tft.setTextSize(4);
   
   
-  digitalWrite( 5, HIGH); 
+  digitalWrite(5, HIGH); 
     if (!SD.begin()) {
     tft.setTextSize(2);
     tft.setTextColor(TFT_RED);
