@@ -1,34 +1,17 @@
 void write1(){
+
+  pending();
   File dataFile;
   struct tm timeinfo;
   getLocalTime(&timeinfo);
-  String fileName = "/"+String(1900+timeinfo.tm_year) + String(1+timeinfo.tm_mon) + ".txt";
-  int flag=0;
-  int y = timeinfo.tm_mday;
-  dataFile = SD.open(fileName,FILE_READ);
-    while (dataFile.available()) {
-      String line = dataFile.readStringUntil('\n');
-        int lineId = line.substring(0, line.indexOf(",")).toInt();
-        int lId = line.substring(line.indexOf(",")+1).toInt();
-        if (lineId == roll && lId==y) {
-            tft.setCursor(40,160);
-            tft.setTextSize(2);
-            tft.setTextColor(TFT_BLUE);
-            tft.print("Already Marked");
-            delay(500);
-            flag=1;
-            break;
-          }
-    }
-  dataFile.close();
-    if(flag==0){
+  String fileName="/"+(String)roll+"/"+"Dates Present"+".txt"; //Directory of Roll No. with file name as Dates Present
+
+
+  String present_date = String(timeinfo.tm_mday) + "/"+String(1900+timeinfo.tm_year)+"/" + String(1+timeinfo.tm_mon) + ".txt";
   dataFile=SD.open(fileName,FILE_APPEND);
-  dataFile.print(roll);
-  dataFile.print(",");
-  dataFile.print(y);
-  dataFile.println();
+  dataFile.println(present_date);
   dataFile.close();
-  pending();
+  
   tft.setCursor(40,160);
   tft.setTextColor(TFT_BLUE);
   tft.setTextSize(3);
@@ -37,4 +20,3 @@ void write1(){
   tft.fillScreen(TFT_WHITE);
   read1();
     }
-}
