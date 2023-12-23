@@ -1,4 +1,4 @@
-int read1() {
+void read1() {
     struct tm timeinfo;
     getLocalTime(&timeinfo);
     String fileName="/"+(String)roll+"/"+"Days Present"+".txt";
@@ -10,14 +10,12 @@ int read1() {
     File dataFile;
     dataFile = SD.open(fileName,FILE_READ);
     String line = dataFile.readStringUntil('\n');
-    int d= line.toInt();
     tft.setCursor(240,10);
-    tft.print(d);
+    tft.print(line);
     tft.setCursor(40,100);
     tft.print("in ");
     tft.print(&timeinfo,"%B");
     delay(2500);
     dataFile.close();
-    return d;
 
 }
