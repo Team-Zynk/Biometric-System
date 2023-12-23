@@ -6,12 +6,12 @@ void write1(){
   getLocalTime(&timeinfo);
   SD.mkdir("/"+(String)roll);
  
-  String fileName="/"+(String)roll+"/"+"Dates Present"+".txt"; //Directory of Roll No. with file name as Dates Present
+  String fileName="/"+(String)roll+"/"+"Dates_Present"+".txt"; //Directory of Roll No. with file name as Dates Present
   String present_date = String(timeinfo.tm_mday) + "/"+String(1900+timeinfo.tm_year)+"/" + String(1+timeinfo.tm_mon) + ".txt";
-  String last_date="/"+(String)roll+"/"+"Last Date"+".txt";
+  String last_date="/"+(String)roll+"/"+"Last_Date"+".txt";
   dataFile = SD.open(last_date,FILE_READ);
   String line = dataFile.readStringUntil('\n');
-  datafile.close();
+  dataFile.close();
   if(line==present_date)
   {tft.setCursor(40,160);
   tft.setTextColor(TFT_BLUE);
@@ -33,7 +33,7 @@ void write1(){
   dataFile=SD.open(fileName,FILE_APPEND);
   dataFile.println(present_date);
   dataFile.close();
-  fileName="/"+(String)roll+"/"+"Days Present"+".txt"; //Directory of Roll No. with file name as Days Present
+  fileName="/"+(String)roll+"/"+"Days_Present"+".txt"; //Directory of Roll No. with file name as Days Present
   dataFile = SD.open(fileName,FILE_READ);
   line = dataFile.readStringUntil('\n');
   int present_days= line.toInt();
@@ -41,7 +41,7 @@ void write1(){
   dataFile.close();
   SD.remove(fileName);
   dataFile=SD.open(fileName,FILE_APPEND);
-  dataFile.println(present_date);
+  dataFile.println(present_days);
   dataFile.close();
   
 

@@ -1,7 +1,7 @@
 void read1() {
     struct tm timeinfo;
     getLocalTime(&timeinfo);
-    String fileName="/"+(String)roll+"/"+"Days Present"+".txt";
+    String fileName="/"+(String)roll+"/"+"Days_Present"+".txt";
     tft.fillScreen(TFT_WHITE);
     tft.setCursor(40,10);
     tft.setTextSize(2);

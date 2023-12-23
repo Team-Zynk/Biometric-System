@@ -161,7 +161,7 @@ String stringgen(int x);
 Adafruit_Fingerprint finger = Adafruit_Fingerprint(&SerialPort);
 void setup() {
   // put your setup code here, to run once:
-  Serial.begin(115200);
+  Serial.begin(9600);
   SerialPort.begin(57600,Serial1,16,17);
   delay(10);
   delay(5000);
@@ -250,7 +250,7 @@ void setup() {
   WiFi.disconnect(true);  //disconnect form wifi to set new wifi connection
   WiFi.mode(WIFI_STA); //init wifi mode
   // // Example1 (most common): a cert-file-free eduroam with PEAP (or TTLS)
-  // WiFi.begin("IITD_WIFI", WPA2_AUTH_PEAP,"", "ee1221737","5c0c2a10");
+ 
   // delay(500);
   WiFi.begin("Xiaomi 11T Pro","nahi pata");
 
