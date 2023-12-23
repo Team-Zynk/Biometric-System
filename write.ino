@@ -4,6 +4,7 @@ void write1(){
   File dataFile;
   struct tm timeinfo;
   getLocalTime(&timeinfo);
+  Sd.mkdir((String)roll);
   String fileName="/"+(String)roll+"/"+"Dates Present"+".txt"; //Directory of Roll No. with file name as Dates Present
 
 
