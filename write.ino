@@ -43,9 +43,6 @@ void write1(){
   dataFile=SD.open(fileName,FILE_APPEND);
   dataFile.println(present_days);
   dataFile.close();
-  
-
-
   tft.setCursor(40,160);
   tft.setTextColor(TFT_BLUE);
   tft.setTextSize(3);
