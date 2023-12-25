@@ -1,16 +1,25 @@
-void saver(uint16_t strength){
+void saver(){
    tft.fillScreen(TFT_WHITE);
    tft.setTextColor(TFT_BLUE);
    tft.setTextSize(3);
    tft.setCursor(40,10);
    File dataFile;
    dataFile=SD.open("/daynum.txt",FILE_READ);
-   int daynum=0;
+   uint16_t daynum=0;
    while(dataFile.available()){
     String line = dataFile.readStringUntil('\n');
     daynum=line.toInt();
    }
    dataFile.close();
+   dataFile=SD.open("/strength.txt",FILE_READ);
+   uint16_t strength=0;
+   while(dataFile.available()){
+    String line = dataFile.readStringUntil('\n');
+    strength=line.toInt();
+   }
+   dataFile.close();
+
+
   
    String fileName = "/"+String("pending") + ".txt"; 
    if(SD.exists(fileName)){
@@ -32,7 +41,7 @@ void saver(uint16_t strength){
     WiFi.disconnect(true);
     WiFi.mode(WIFI_OFF);
     tftreset();
-    Serial.println("P");
+    
     tft.setTextColor(TFT_BLUE);
     tft.setTextSize(3);
     tft.setCursor(40,10);
@@ -66,7 +75,6 @@ void saver(uint16_t strength){
         // valueRange.set("values/[0]/[3]", "A");
         // valueRange.set("values/[0]/[4]", "L");
       
-       Serial.println("Q");
         // For Google Sheet API ref doc, go to https://developers.google.com/sheets/api/reference/rest/v4/spreadsheets.values/append
 
         bool success = GSheet.values.append(&response /* returned response */, "1hfmKLyTc_rjSeS1E3KvEp9h04tVyG9RGldDozgvCun0" /* spreadsheet Id to append */, s /* range to append */, &valueRange /* data range to append */);
@@ -79,74 +87,37 @@ void saver(uint16_t strength){
     Serial.println("Baigan");
     taskComplete=false;
     int k=0;
-    // while(!taskComplete){
-    //   bool ready = GSheet.ready();
-    // if (ready && !taskComplete)
-    // { FirebaseJson response;
-    //     // Instead of using FirebaseJson for response, you can use String for response to the functions
-    //     // especially in low memory device that deserializing large JSON response may be failed as in ESP8266
-    //    String s="Sheet1!"+stringgen(daynum+2)+String(k+2);
-    //     FirebaseJson valueRange;
-    //     valueRange.add("majorDimension", "ROWS");
-    //     valueRange.set("values/[0]/[0]"," ");
-    //     // valueRange.set("values/[0]/[1]", "A");
-    //     // valueRange.set("values/[0]/[2]", "A");
-    //     // valueRange.set("values/[0]/[3]", "A");
-    //     // valueRange.set("values/[0]/[4]", "L");
-    //     // For Google Sheet API ref doc, go to https://developers.google.com/sheets/api/reference/rest/v4/spreadsheets.values/append
-
-    //     bool success = GSheet.values.append(&response /* returned response */, "1hfmKLyTc_rjSeS1E3KvEp9h04tVyG9RGldDozgvCun0" /* spreadsheet Id to append */, "Sheet1!C1" /* range to append */, &valueRange /* data range to append */);
-    //     if (success){
-    //         k++;
-    //     }
-        
-    //     if(k==strength){
-    //       taskComplete=true;
-    //     }
-    // }
-    // }
-
-    taskComplete=false;
-    FirebaseJsonArray batchData;
-
-    for (int k = 0; k < 2; ++k) {
-    // ... (your existing loop logic to update values)
-
-    // Example: Add data to the batch array
-    FirebaseJson data;
-     data.add("majorDimension", "COLUMNS");
-    data.add("range", "Sheet1!" + stringgen(daynum + 2) + String(k + 2));
-    data.add("values/[0]/[0]", "A");
-
-    batchData.add(data);
-    }
     while(!taskComplete){
       bool ready = GSheet.ready();
     if (ready && !taskComplete)
-    { String response;
-        // Instead of using FirebaseJson for response, you can use String for response toa the functions
+    { FirebaseJson response;
+        // Instead of using FirebaseJson for response, you can use String for response to the functions
         // especially in low memory device that deserializing large JSON response may be failed as in ESP8266
-      //  String s="Sheet1!"+stringgen(daynum+2)+String(k+2);
-      //   FirebaseJson valueRange;
-      //   valueRange.add("majorDimension", "COLUMNS");
-      //   valueRange.set("values/[0]/[0]","A");
+       String s="Sheet1!"+stringgen(daynum+2)+String(k+2);
+        FirebaseJson valueRange;
+        valueRange.add("majorDimension", "ROWS");
+        valueRange.set("values/[0]/[0]","A");
         // valueRange.set("values/[0]/[1]", "A");
         // valueRange.set("values/[0]/[2]", "A");
         // valueRange.set("values/[0]/[3]", "A");
         // valueRange.set("values/[0]/[4]", "L");
         // For Google Sheet API ref doc, go to https://developers.google.com/sheets/api/reference/rest/v4/spreadsheets.values/append
 
-        bool success = GSheet.values.batchUpdate(&response /* returned response */, "1hfmKLyTc_rjSeS1E3KvEp9h04tVyG9RGldDozgvCun0" /* spreadsheet Id to append */, &batchData /* data range to append */);
+        bool success = GSheet.values.append(&response /* returned response */, "1hfmKLyTc_rjSeS1E3KvEp9h04tVyG9RGldDozgvCun0" /* spreadsheet Id to append */, s /* range to append */, &valueRange /* data range to append */);
         if (success){
-            taskComplete=true;
+            k++;
         }
         
-        
+        if(k==strength){
+          taskComplete=true;
+        }
     }
     }
 
+  
+
     taskComplete=false;
-    Serial.println("Baigan");
+    
     String line = dataFile.readStringUntil('\n');
     Serial.println(line);
     String temp="";

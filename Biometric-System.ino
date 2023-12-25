@@ -217,7 +217,6 @@ void setup() {
   tft.setSwapBytes(true);
   tft.setRotation(1);            //Set Rotation to landscape
   tft.fillScreen(TFT_WHITE);
-  Serial.println(tft.textWidth("Admin Access Window"));
   tft.setTextSize(4);
   digitalWrite(5, HIGH);
     if (!SD.begin()) {
@@ -234,13 +233,13 @@ void setup() {
   }
 
    drawSdJpeg("/iitlogo.jpg", 80, 60);  // This draws a jpeg pulled off the SD Card
-   printer("INITIALIZATION",30,10,3,460,TFT_BLUE);
+   printer("INITIALIZATION",0,10,3,480,TFT_BLUE);
    for(int i=0;i<3;i++){
     tft.print(". ");
     delay(500);
    }
   delay(500);     
-  google(14);          //update student info file from google sheets
+  google();          //update student info file from google sheets
   delay(1000);
   
   finger.begin(57600);     // set the data rate for the sensor serial port
