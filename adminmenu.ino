@@ -1,7 +1,7 @@
 void adminmenu(){            //Admin  Access Window
   tft.fillScreen(TFT_WHITE);
   drawSdJpeg("/iitlogo.jpg", 80, 40);
-  printer("Admin Access Window",10,10,3,460,TFT_BLUE);
+  printer("Admin Access Window",0,10,3,480,TFT_BLUE);
   b1.displayall();
   uint16_t x,y; //Coordinates to detect touch position;
   int x1=-1;

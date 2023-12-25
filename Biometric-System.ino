@@ -150,16 +150,26 @@ Buttons b2 =Buttons(2,TFT_SKYBLUE,TFT_BLACK);
 int admin[10];
 int roll=-1;
 int k=1;
+
+void Forcetime(){
+  getLocalTime(&oldtime);
+  struct tm timeinfo;
+  getLocalTime(&timeinfo);
+  tft.setTextSize(2);
+  tft.setCursor(60,280);
+  tft.fillRect(60,280,480,20,TFT_WHITE);
+  tft.println(&timeinfo, "%A, %B %d %Y %H:%M");
+}
 void printLocalTime() //print the local time once sync with wifi
 { tft.setTextSize(2);
-  tft.setCursor(40,280);
+  tft.setCursor(60,280);
   struct tm timeinfo;
   if(!getLocalTime(&timeinfo)){
     Serial.println("Failed to obtain time");
     return;
   }
   if(timeinfo.tm_min!=oldtime.tm_min){
-  tft.fillRect(40,280,480,20,TFT_WHITE);
+  tft.fillRect(60,280,480,20,TFT_WHITE);
   tft.println(&timeinfo, "%A, %B %d %Y %H:%M");
   oldtime=timeinfo;
   }
@@ -176,12 +186,19 @@ String stringgen(int x){       //to generate string for a given column number in
 
 void printer(String txt,uint16_t x,uint16_t y,uint16_t s,uint16_t ln,uint16_t color)
 { // print center aligned text
-tft.setCursor(x+(ln-tft.textWidth(txt))/2,y);
+tft.setCursor(x+(ln-tft.textWidth(txt,s))/2,y);
 tft.setTextSize(s);
 tft.setTextColor(color);
 tft.print(txt);
 }
 
+
+void HomeScreen(){  // The Homescreen for the attendance system
+tft.fillScreen(TFT_WHITE);
+drawSdJpeg("/c_logo.jpg", 0, 0);  //The Background image
+printer("Designed & Developed by",10,10,2,460,TFT_BLUE);
+Forcetime();
+}
 
 Adafruit_Fingerprint finger = Adafruit_Fingerprint(&SerialPort); //Serialport 2 given to fingerprint 
 void setup() {
@@ -199,6 +216,7 @@ void setup() {
   tft.setSwapBytes(true);
   tft.setRotation(1);            //Set Rotation to landscape
   tft.fillScreen(TFT_WHITE);
+  Serial.println(tft.textWidth("Admin Access Window"));
   tft.setTextSize(4);
   digitalWrite(5, HIGH);
     if (!SD.begin()) {
@@ -214,7 +232,7 @@ void setup() {
     return;
   }
 
-  drawSdJpeg("/iitlogo.jpg", 80, 60);  // This draws a jpeg pulled off the SD Card
+   drawSdJpeg("/iitlogo.jpg", 80, 60);  // This draws a jpeg pulled off the SD Card
    printer("INITIALIZATION",30,10,3,460,TFT_BLUE);
    for(int i=0;i<3;i++){
     tft.print(". ");
@@ -240,15 +258,26 @@ void setup() {
 
   finger.getTemplateCount();  //get number of fingerprints stored
 
+   if(!SD.exists("/on.txt")){
+   roll=127;
+   while (!getFingerprintEnroll()){};
+   File file;
+   file=SD.open("/on.txt",FILE_WRITE);
+   file.close();
+  }
+  admincheck();
+
   if (finger.templateCount == 0) {
-    Serial.print("Sensor doesn't contain any fingerprint data. Please run the 'enroll' example.");
+   printer("Did not find",10,60,3,460,TFT_BLUE);
+   printer("Any fingerprint data",10,110,3,460,TFT_BLUE);
+   delay(1000);
   }
   else {
-    Serial.println("Waiting for valid finger...");
-      Serial.print("Sensor contains "); Serial.print(finger.templateCount); Serial.println(" templates");
+   printer(String(finger.templateCount)+" Fingerprints found",10,60,3,460,TFT_BLUE);
+   delay(1000);
   }
 
-  if(!SD.exists("/daynum.txt")){
+  if(!SD.exists("/daynum.txt")){       //Initialize number of days file
     File dataFile=SD.open("/daynum.txt",FILE_APPEND);
     dataFile.print("1");
     dataFile.close();
@@ -257,7 +286,7 @@ void setup() {
   WiFi.disconnect(true);  //disconnect form wifi to set new wifi connection
   WiFi.mode(WIFI_STA); //init wifi mode
   // // Example1 (most common): a cert-file-free eduroam with PEAP (or TTLS)
-  // WiFi.begin("IITD_WIFI", WPA2_AUTH_PEAP,"", "ee1221737","5c0c2a10");
+
   // delay(500);
   WiFi.begin("Xiaomi 11T Pro","nahi pata");
 
@@ -275,10 +304,13 @@ void setup() {
     }
   }
 
+  configTime(19800,0,"pool.ntp.org");    //Get time from the server
+  WiFi.disconnect(true);
+  WiFi.mode(WIFI_OFF);
+  tftreset();
+
   //Insert all buttons
-  b3.insert(80,50,"MONTHWISE");
-  b3.insert(80,190,"YEARWISE");
-  b3.insert(80,170,"EXIT");
+
   b1.insert(40,50,"Mark Attendance");
   b1.insert(270,50,"Read Attendance");
   b1.insert(40,130,"Save file");
@@ -297,83 +329,22 @@ void setup() {
   b2.insert(400,170,"9");
   b2.insert(240,250,"Del");
   b2.insert(400,250,"Next");
-  
-  configTime(19800,0,"pool.ntp.org");
-  printLocalTime();
-  WiFi.disconnect(true);
-  WiFi.mode(WIFI_OFF);
- tftreset();
- if(!SD.exists("/on.txt")){
-   roll=127;
-   while (!getFingerprintEnroll()){};
-   File file;
-   file=SD.open("/on.txt",FILE_WRITE);
-   file.close();
-  }
-  admincheck();
- 
   tft.fillScreen(TFT_WHITE);
-  tft.setTextSize(5);
-  tft.setCursor((480-tft.textWidth("INITIALIZATION"))/2,60);
-  tft.setTextColor(TFT_BLUE);
-  tft.println("INITIALIZATION");
-  tft.setCursor((480-tft.textWidth("Finished"))/2,120);
-  tft.println("FINISHED");
-  delay(2000);
-  tft.fillScreen(TFT_WHITE);
-   tft.setTextSize(2);
-   tft.setTextColor(TFT_BLACK);
-  tft.setCursor((480-tft.textWidth("Developed & Designed by"))/2,10);
-  drawSdJpeg("/c_logo.jpg", 0, 0);
-  tft.println("Designed & Developed by");
-  getLocalTime(&oldtime);
-  struct tm timeinfo;
-  getLocalTime(&timeinfo);
-  tft.setTextSize(2);
-  tft.setCursor(40,280);
-  tft.fillRect(20,280,480,20,TFT_WHITE);
-  tft.println(&timeinfo, "%A, %B %d %Y %H:%M");
-       // This draws a jpeg pulled off the SD Card
-  delay(2000);
+  printer("Initialization",10,60,5,460,TFT_BLACK);
+  printer("Finsished",10,120,5,460,TFT_BLACK);
+  delay(1000);
+  HomeScreen();
 }
 void loop() {
-  // put your main code here, to run repeatedly:
-  
    printLocalTime();
    roll=getFingerprintID(); 
    if(roll!=-1){
     if(checkmore()){
-      
       adminmenu();
-     tft.fillScreen(TFT_WHITE);
-   tft.setTextSize(2);
-   tft.setTextColor(TFT_BLACK);
-  tft.setCursor((480-tft.textWidth("Developed & Designed by"))/2,10);
-  drawSdJpeg("/c_logo.jpg", 0, 0);
-    tft.println("Designed & Developed by");
-    struct tm timeinfo;
-  getLocalTime(&timeinfo);
-  tft.setTextSize(2);
-  tft.setCursor(40,280);
-  tft.fillRect(20,280,480,20,TFT_WHITE);
-  tft.println(&timeinfo, "%A, %B %d %Y %H:%M");    // This draws a jpeg pulled off the SD Card
-    delay(2000);
     }else{
     write1();
-     tft.fillScreen(TFT_WHITE);
-   tft.setTextSize(2);
-   tft.setTextColor(TFT_BLACK);
-  tft.setCursor((480-tft.textWidth("Developed & Designed by"))/2,10);
-  drawSdJpeg("/c_logo.jpg", 0, 0);
-    tft.println("Designed & Developed by");
-    struct tm timeinfo;
-  getLocalTime(&timeinfo);
-  tft.setTextSize(2);
-  tft.setCursor(40,280);
-  tft.fillRect(20,280,480,20,TFT_WHITE);
-  tft.println(&timeinfo, "%A, %B %d %Y %H:%M");   // This draws a jpeg pulled off the SD Card
-    delay(2000);
     }
+    HomeScreen();
    }
    roll=-1;      
 }
@@ -394,20 +365,7 @@ int getFingerprintID() {
      tft.setCursor(40,120);
      tft.println(F("Did Not Match"));
      delay(1000); 
-      tft.fillScreen(TFT_WHITE);
-   tft.setTextSize(2);
-   tft.setTextColor(TFT_BLACK);
-  tft.setCursor((480-tft.textWidth("Developed & Designed by"))/2,10);
-  drawSdJpeg("/c_logo.jpg", 0, 0);
-    tft.println(F("Designed & Developed by"));
-    struct tm timeinfo;
-  getLocalTime(&timeinfo);
-  tft.setTextSize(2);
-  tft.setCursor(40,280);
-  tft.fillRect(20,280,480,20,TFT_WHITE);
-  tft.println(&timeinfo, "%A, %B %d %Y %H:%M");   // This draws a jpeg pulled off the SD Card
-     // This draws a jpeg pulled off the SD Card
-    delay(2000);
+     HomeScreen();
      return -1;
   }
   
@@ -440,3 +398,4 @@ void tftreset(){             //Reset pinmodes of tft after wifi connection break
     pinMode(TFT_D5, OUTPUT); digitalWrite(TFT_D5, HIGH);
     pinMode(TFT_D6, OUTPUT); digitalWrite(TFT_D6, HIGH);
     pinMode(TFT_D7, OUTPUT); digitalWrite(TFT_D7, HIGH);
+}
