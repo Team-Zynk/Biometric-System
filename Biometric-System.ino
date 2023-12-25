@@ -250,7 +250,11 @@ void setup() {
   WiFi.disconnect(true);  //disconnect form wifi to set new wifi connection
   WiFi.mode(WIFI_STA); //init wifi mode
   // // Example1 (most common): a cert-file-free eduroam with PEAP (or TTLS)
+<<<<<<< HEAD:Biometric-System.ino
  
+=======
+
+>>>>>>> 822f9cb4d1d1f53fcc0457afa673a8d1cbb19d7b:attend2.ino
   // delay(500);
   WiFi.begin("Xiaomi 11T Pro","nahi pata");
 
