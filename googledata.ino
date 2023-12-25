@@ -14,6 +14,7 @@ void google(){           //get student data from sheet
       break;
     }
   }
+  //hi
   
   if(WiFi.status() != WL_CONNECTED){
     tftreset();
