@@ -33,7 +33,7 @@ void adminmenu(){
       
       break;
    }else if(x1==2){
-      save();
+      saver(10);
       break;
    }else if(x1==3){
       if(roll!=127){
