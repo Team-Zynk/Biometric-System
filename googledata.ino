@@ -44,7 +44,6 @@ void google(){           //get student data from sheet
         FirebaseJson response;
         String s="Sheet1";
         s=s+"!A"+String(k+1)+":B"+String(k+5);
-        tot+=5;
         bool success = GSheet.values.get(&response /* returned response */, "1hfmKLyTc_rjSeS1E3KvEp9h04tVyG9RGldDozgvCun0" /* spreadsheet Id to read */, s /* range to read */);
         size_t count = response.iteratorBegin();
             for (size_t i = 3; i < count; i++)

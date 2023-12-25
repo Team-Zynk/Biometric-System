@@ -24,11 +24,9 @@ void adminmenu(){            //Admin  Access Window
       readadmin();    //Read attendance
       break;
    }else if(x1==2){
-<<<<<<< HEAD
+
       saver();         //Save attendance file for total attendance
-=======
-      saver(10);
->>>>>>> 3c9927ecdcafde93107bdd4d27b06edbafaa19dd
+      
       break;
    }else if(x1==3){
       if(roll!=127){
