@@ -146,7 +146,6 @@ const char* host = "arduino.php5.sk"; //external server domain for HTTP connecti
 struct tm oldtime;
 Buttons b1=Buttons(2,TFT_SKYBLUE,TFT_BLACK);
 Buttons b2 =Buttons(2,TFT_SKYBLUE,TFT_BLACK);
-
 int admin[10];
 int roll=-1;
 int k=1;
@@ -157,11 +156,13 @@ void Forcetime(){
   getLocalTime(&timeinfo);
   tft.setTextSize(2);
   tft.setCursor(60,280);
+  tft.setTextColor(TFT_BLACK);
   tft.fillRect(60,280,480,20,TFT_WHITE);
   tft.println(&timeinfo, "%A, %B %d %Y %H:%M");
 }
 void printLocalTime() //print the local time once sync with wifi
 { tft.setTextSize(2);
+  tft.setTextColor(TFT_BLACK);
   tft.setCursor(60,280);
   struct tm timeinfo;
   if(!getLocalTime(&timeinfo)){
@@ -186,9 +187,9 @@ String stringgen(int x){       //to generate string for a given column number in
 
 void printer(String txt,uint16_t x,uint16_t y,uint16_t s,uint16_t ln,uint16_t color)
 { // print center aligned text
-tft.setCursor(x+(ln-tft.textWidth(txt,s))/2,y);
 tft.setTextSize(s);
 tft.setTextColor(color);
+tft.setCursor(x+(ln-(tft.textWidth(txt)))/2,y);
 tft.print(txt);
 }
 
@@ -196,7 +197,7 @@ tft.print(txt);
 void HomeScreen(){  // The Homescreen for the attendance system
 tft.fillScreen(TFT_WHITE);
 drawSdJpeg("/c_logo.jpg", 0, 0);  //The Background image
-printer("Designed & Developed by",10,10,2,460,TFT_BLUE);
+printer("Designed & Developed by",0,10,2,480,TFT_BLACK);
 Forcetime();
 }
 
@@ -220,14 +221,14 @@ void setup() {
   tft.setTextSize(4);
   digitalWrite(5, HIGH);
     if (!SD.begin()) {
-    printer("SD card mount failed",100,40,2,460,TFT_RED);
+    printer("SD card mount failed",100,40,2,300,TFT_RED);
     delay(1000);
     return;
   }
      uint8_t cardType = SD.cardType();
 
   if (cardType == CARD_NONE) {
-    printer("No SD card attatched",100,40,2,460,TFT_RED);
+    printer("No SD card attatched",100,40,2,300,TFT_RED);
     delay(1000);
     return;
   }
@@ -330,8 +331,8 @@ void setup() {
   b2.insert(240,250,"Del");
   b2.insert(400,250,"Next");
   tft.fillScreen(TFT_WHITE);
-  printer("Initialization",10,60,5,460,TFT_BLACK);
-  printer("Finsished",10,120,5,460,TFT_BLACK);
+  printer("Initialization",0,60,4,480,TFT_BLACK);
+  printer("Finsished",0,120,4,480,TFT_BLACK);
   delay(1000);
   HomeScreen();
 }
