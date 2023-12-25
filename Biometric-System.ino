@@ -254,7 +254,11 @@ void setup() {
  
 =======
 
+<<<<<<< HEAD
 >>>>>>> origin/main:attend2.ino
+=======
+>>>>>>> 822f9cb4d1d1f53fcc0457afa673a8d1cbb19d7b:attend2.ino
+>>>>>>> 7e9305b0a6a7ae89af902ce53fe1197d5c298cde
   // delay(500);
   WiFi.begin("Xiaomi 11T Pro","nahi pata");
 
