@@ -40,7 +40,7 @@ class button{                 // button class to form round rectangular buttons
     
   }
   button(int x1,int y1,int s1,String txta1,String txtb1,int ln1,uint16_t bgc1,uint16_t tc1){  //constructor
-=======
+
 #include "SPI.h"
 #include "TFT_eSPI.h"
 #include <TouchScreen.h>
