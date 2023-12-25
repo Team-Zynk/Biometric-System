@@ -1,4 +1,4 @@
-String getdata(uint16_t x){
+String getdata(uint16_t x){       //pick out data from stdinfo file saved on SD for an id number 
   String fileName=String("/")+String("stdinfo")+String(".txt");
   String ans="";
   if(SD.exists(fileName)){

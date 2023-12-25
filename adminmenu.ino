@@ -1,56 +1,47 @@
-void adminmenu(){
+void adminmenu(){            //Admin  Access Window
   tft.fillScreen(TFT_WHITE);
   drawSdJpeg("/iitlogo.jpg", 80, 40);
-  tft.setCursor(0, 0);
-  tft.setTextColor(TFT_BLUE);  tft.setTextSize(3);
-  tft.setCursor((480-tft.textWidth("Admin Access Window"))/2,0);
-  tft.println("Admin Access Window");
+  printer("Admin Access Window",0,10,3,480,TFT_BLUE);
   b1.displayall();
-  uint16_t x,y;
- int x1=-1;
- int s=0;
- while(x1!=5){
+  uint16_t x,y; //Coordinates to detect touch position;
+  int x1=-1;
+  while(x1!=5){
    while(!Touched(true,&x,&y)){
    }
    x1=b1.checkpress(x,y);
    if(x1==0){
     if(roll!=127){
       tft.fillScreen(TFT_WHITE);
-      tft.setTextColor(TFT_RED);
-      tft.setTextSize(3);
-      tft.setCursor(70,50);
-      tft.println("ACCESS DENIED");
-      tft.setCursor(20,120);
-      tft.println("Only for Super Admin");
+      printer("Access Denied",40,10,3,460,TFT_BLUE);
+      printer("Only for super admin",40,10,3,460,TFT_RED);
       delay(2000);
       break;
     }else{
-      markadmin();
+      markadmin();    //Mark arbitrary attendance
       break;
     }
    }else if(x1==1){
-      readadmin();
-      
+      readadmin();    //Read attendance
       break;
    }else if(x1==2){
+<<<<<<< HEAD
+      saver();         //Save attendance file for total attendance
+=======
       saver(10);
+>>>>>>> 3c9927ecdcafde93107bdd4d27b06edbafaa19dd
       break;
    }else if(x1==3){
       if(roll!=127){
       tft.fillScreen(TFT_WHITE);
-      tft.setTextColor(TFT_RED);
-      tft.setTextSize(3);
-      tft.setCursor(50,50);
-      tft.println("ACCESS DENIED");
-      tft.setCursor(20,120);
-      tft.println("Only for Super Admin");
+      printer("Access Denied",40,10,3,460,TFT_BLUE);
+      printer("Only for super admin",40,10,3,460,TFT_RED);
       delay(2000);
       break;
     }else{
-      appoint();
+      appoint();        //Appoint admin
       break;
     }
-   }else if(x1==4){
+   }else if(x1==4){    //Enroll finger print
       enroll();
       break;
    }
