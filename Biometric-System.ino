@@ -138,7 +138,9 @@ TouchScreen ts = TouchScreen(4, 33, 32, 15, 300);
 int admin[10];
 int roll=-1;
 int k=1;
+
 int tot=0;
+
 void printLocalTime()
 { tft.setTextSize(2);
   tft.setCursor(40,280);
@@ -162,7 +164,9 @@ String stringgen(int x);
 Adafruit_Fingerprint finger = Adafruit_Fingerprint(&SerialPort);
 void setup() {
   // put your setup code here, to run once:
+
   Serial.begin(115200);
+
   SerialPort.begin(57600,Serial1,16,17);
   delay(10);
   delay(5000);
@@ -205,7 +209,9 @@ void setup() {
   tft.setTextColor(TFT_BLUE);
   tft.println("INITIALIZATION...");
   delay(700);     // This draws a jpeg pulled off the SD Card
+
   google(14,tot);
+
   // WiFi.disconnect(true);
   // WiFi.mode(WIFI_OFF); 
   // tftreset();
@@ -251,7 +257,9 @@ void setup() {
   WiFi.disconnect(true);  //disconnect form wifi to set new wifi connection
   WiFi.mode(WIFI_STA); //init wifi mode
   // // Example1 (most common): a cert-file-free eduroam with PEAP (or TTLS)
-  
+Biometric-System.ino
+ 
+
   // delay(500);
   WiFi.begin("Xiaomi 11T Pro","nahi pata");
 
