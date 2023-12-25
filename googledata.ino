@@ -14,6 +14,7 @@ void google(uint16_t strength){
       break;
     }
   }
+  //hi
   
   if(WiFi.status() != WL_CONNECTED){
     tftreset();
