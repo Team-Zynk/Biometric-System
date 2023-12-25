@@ -138,6 +138,7 @@ TouchScreen ts = TouchScreen(4, 33, 32, 15, 300);
 int admin[10];
 int roll=-1;
 int k=1;
+int tot=0;
 void printLocalTime()
 { tft.setTextSize(2);
   tft.setCursor(40,280);
@@ -204,7 +205,7 @@ void setup() {
   tft.setTextColor(TFT_BLUE);
   tft.println("INITIALIZATION...");
   delay(700);     // This draws a jpeg pulled off the SD Card
-  google(14);
+  google(14,tot);
   // WiFi.disconnect(true);
   // WiFi.mode(WIFI_OFF); 
   // tftreset();
