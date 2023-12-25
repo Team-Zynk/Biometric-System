@@ -279,7 +279,13 @@ void setup() {
 
   if(!SD.exists("/daynum.txt")){       //Initialize number of days file
     File dataFile=SD.open("/daynum.txt",FILE_APPEND);
-    dataFile.print("1");
+    dataFile.print("0");
+    dataFile.close();
+  }
+
+  if(!SD.exists("/strength.txt")){       //Initialize strength file
+    File dataFile=SD.open("/strength.txt",FILE_APPEND);
+    dataFile.print("0");
     dataFile.close();
   }
 
@@ -330,8 +336,8 @@ void setup() {
   b2.insert(240,250,"Del");
   b2.insert(400,250,"Next");
   tft.fillScreen(TFT_WHITE);
-  printer("Initialization",0,60,4,480,TFT_BLACK);
-  printer("Finsished",0,120,4,480,TFT_BLACK);
+  printer("INITIALIZATION",0,60,4,480,TFT_BLUE);
+  printer("FINISHED",0,120,4,480,TFT_BLUE);
   delay(1000);
   HomeScreen();
 }
