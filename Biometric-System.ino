@@ -205,6 +205,7 @@ Forcetime();
 
 Adafruit_Fingerprint finger = Adafruit_Fingerprint(&SerialPort); //Serialport 2 given to fingerprint 
 void setup() {
+  // put your setup code here, to run once:
   Serial.begin(115200);
   SerialPort.begin(57600,Serial1,16,17);
   delay(1000);
