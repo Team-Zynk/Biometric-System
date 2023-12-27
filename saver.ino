@@ -21,19 +21,18 @@ void saver(){
    String fileName = "/"+String("pending") + ".txt"; 
    if(SD.exists(fileName)){
    tft.print("Connecting to WiFi");
-    WiFi.disconnect(true);
-   WiFi.mode(WIFI_STA);
-   WiFi.begin("Xiaomi 11T Pro","nahi pata");
-   int counter =0;
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    Serial.print(".");
-    counter++;
-    if(counter>=60){ //after 30 seconds timeout - reset board
-      break;
-    }
-  }
-  if(WiFi.status() != WL_CONNECTED){
+    
+  //  WiFi.begin("Xiaomi 11T Pro","nahi pata");
+  //  int counter =0;
+  // while (WiFi.status() != WL_CONNECTED) {
+  //   delay(500);
+  //   Serial.print(".");
+  //   counter++;
+  //   if(counter>=60){ //after 30 seconds timeout - reset board
+  //     break;
+  //   }
+  // }
+  if(!wifi()){
     WiFi.disconnect(true);
     WiFi.mode(WIFI_OFF);
     tftreset();
@@ -156,6 +155,7 @@ void saver(){
         }
         }
     }
+    
     daynum++;
     }
     dataFile.close();

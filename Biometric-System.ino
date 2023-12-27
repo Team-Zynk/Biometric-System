@@ -297,26 +297,28 @@ void setup() {
   // // Example1 (most common): a cert-file-free eduroam with PEAP (or TTLS)
 
  
-  // delay(500);
-  WiFi.begin("Xiaomi 11T Pro","nahi pata");
+  // // delay(500);
+  // WiFi.begin("Xiaomi 11T Pro","nahi pata");
 
-  // Example 2: a cert-file WPA2 Enterprise with PEAP
-  //WiFi.begin(ssid, WPA2_AUTH_PEAP, EAP_IDENTITY, EAP_USERNAME, EAP_PASSWORD, ca_pem, client_cert, client_key);
-  // Example 3: TLS with cert-files and no password
-  //WiFi.begin(ssid, WPA2_AUTH_TLS, EAP_IDENTITY, NULL, NULL, ca_pem, client_cert, client_key);
-  int counter =0;
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    Serial.print(".");
-    counter++;
-    if(counter>=60){ //after 30 seconds timeout - reset board
-      break;
-    }
-  }
-
+  // // Example 2: a cert-file WPA2 Enterprise with PEAP
+  // //WiFi.begin(ssid, WPA2_AUTH_PEAP, EAP_IDENTITY, EAP_USERNAME, EAP_PASSWORD, ca_pem, client_cert, client_key);
+  // // Example 3: TLS with cert-files and no password
+  // //WiFi.begin(ssid, WPA2_AUTH_TLS, EAP_IDENTITY, NULL, NULL, ca_pem, client_cert, client_key);
+  // int counter =0;
+  // while (WiFi.status() != WL_CONNECTED) {
+  //   delay(500);
+  //   Serial.print(".");
+  //   counter++;
+  //   if(counter>=60){ //after 30 seconds timeout - reset board
+  //     break;
+  //   }
+  // }
+  if(wifi()){
   configTime(19800,0,"pool.ntp.org");    //Get time from the server
   WiFi.disconnect(true);
   WiFi.mode(WIFI_OFF);
+  
+  }
   tftreset();
 
   //Insert all buttons

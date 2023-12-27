@@ -4,19 +4,19 @@ void google(){           //get student data from sheet
    tft.setTextSize(3);
    tft.setCursor(40,10);
    tft.print("Connecting to WiFi");
-   WiFi.begin("Xiaomi 11T Pro","nahi pata");
-   int counter =0;
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    Serial.print(".");
-    counter++;
-    if(counter>=60){ //after 30 seconds timeout - reset board
-      break;
-    }
-  }
-  //hi
+  //  WiFi.begin("Xiaomi 11T Pro","nahi pata");
+  //  int counter =0;
+  // while (WiFi.status() != WL_CONNECTED) {
+  //   delay(500);
+  //   Serial.print(".");
+  //   counter++;
+  //   if(counter>=60){ //after 30 seconds timeout - reset board
+  //     break;
+  //   }
+  // }
+  // //hi
   
-  if(WiFi.status() != WL_CONNECTED){
+  if(!wifi()){
     tftreset();
     tft.fillScreen(TFT_WHITE);
     tft.setTextColor(TFT_BLUE);
