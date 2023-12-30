@@ -1,0 +1,127 @@
+// Script Used for Google Sheets 
+
+/*function onEdit(e) {
+  var sheet = e.source.getSheetByName('Sheet1'); // Change 'Sheet1' to your sheet name
+  var range = e.range;
+  var column = range.getColumn();
+
+    var editedValue = range.getValue();
+     if (editedValue === 'A') {
+      var newValue = 'Absent';
+      range.setValue(newValue);
+      }
+    else if (editedValue === 'P')  
+    {
+      var newValue = 'Present';
+      range.setValue(newValue);
+    }
+}*/
+
+function writeToNewCell(newValue) {
+  // Get the active sheet
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+
+  // Get the last row in the sheet with content
+  var lastRow = sheet.getLastColumn();
+
+  // Calculate the new row by adding 1 to the last row
+  var newRow = lastRow + 1;
+  lastRow = sheet.getLastRow();
+  // Write the new value to the new cell in column A
+  sheet.getRange(lastRow, newRow).setValue(newValue);
+}
+
+
+
+
+function myScheduledFunction() {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var range = sheet.getDataRange();
+  var values = range.getValues();
+
+  // Iterate through each cell in the range
+  for (var i = 0; i < values.length; i++) {
+    for (var j = 0; j < values[i].length; j++) {
+      var originalValue = values[i][j];
+
+      // Check if the cell value is exactly 'A' (not part of 'AP')
+
+        // Update the value directly in the values array
+        values[i][j] = 'Absent';
+      
+    }
+  }
+
+
+
+
+  // Update the values in the sheet
+  range.setValues(values);
+}
+function sumWithAbsentValues() {
+  // Get the active sheet
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+ var lastColumn = sheet.getLastColumn(); // Get the last column dynamically
+  var sumColumn = lastColumn + 1;
+
+  for (var i = 1; i <= sheet.getLastRow(); i++) {
+
+
+
+  // Define the row number you want to sum (adjust as needed)
+  var rowNumber = i;
+
+  // Define the range for the row
+  var startColumn = 1; // Adjust as needed
+ 
+  var range = sheet.getRange(rowNumber, startColumn, 1, lastColumn);
+
+  // Get the values in the row
+  var rowValues = range.getValues()[0]; // Assuming only one row is fetched
+
+  // Calculate the sum based on the presence of "Absent" values
+  var rowSum = rowValues.reduce(function (sum, value) {
+    // If the value is "Absent", add 1 to the sum, otherwise add 0
+    return sum + (value.toString().toLowerCase() === 'present' ? 1 : 0);
+  }, 0);
+  rowSum = (rowSum/ (lastColumn-1))*100 ;
+  var result = rowSum +"%" ;
+  // Put the sum in the next column
+  // Assuming the sum goes in the next column
+  sheet.getRange(rowNumber, sumColumn).setValue(result);
+
+ 
+}
+}
+
+function generateRandomDataset() {
+  // Create a new Google Sheet
+  var spreadsheet = SpreadsheetApp.create('Random Attendance Dataset');
+  var sheet = spreadsheet.getActiveSheet();
+
+  // Set headers
+  sheet.appendRow(['Student ID', 'Date', 'Attendance']);
+
+  // Number of students and days
+  var numStudents = 60;
+  var numDays = 30;
+
+  // Populate the dataset
+  for (var student = 1; student <= numStudents; student++) {
+    for (var day = 1; day <= numDays; day++) {
+      var attendance = Math.random() < 0.5 ? 'Present' : 'Absent'; // Adjust the probability as needed
+      sheet.appendRow([student, day, attendance]);
+
+      // Add a row with the opposite attendance for variety
+      var oppositeAttendance = attendance === 'Present' ? 'Absent' : 'Present';
+      sheet.appendRow([student, day, oppositeAttendance]);
+    }
+  }
+
+  Logger.log('Random dataset generated and populated in the sheet.');
+  Logger.log('Spreadsheet URL: ' + spreadsheet.getUrl());
+}
+
+
+
+//writeToNewCell("Hi");
