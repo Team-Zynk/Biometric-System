@@ -55,6 +55,7 @@ void google(){           //get student data from sheet
                 value = response.valueAt(i);
                 dataFile.print(value.value.c_str());
                 dataFile.println();
+                Serial.println(".");
                 strength++;
             }
             response.iteratorEnd();

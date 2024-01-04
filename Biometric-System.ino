@@ -243,7 +243,7 @@ void setup() {
    }
   delay(500);     
   google();          //update student info file from google sheets
-  delay(1000);
+  
   
   finger.begin(57600);     // set the data rate for the sensor serial port
   delay(100); 
@@ -292,8 +292,8 @@ void setup() {
     dataFile.close();
   }
 
-  WiFi.disconnect(true);  //disconnect form wifi to set new wifi connection
-  WiFi.mode(WIFI_STA); //init wifi mode
+   //disconnect form wifi to set new wifi connection
+  // WiFi.mode(WIFI_STA); //init wifi mode
   // // Example1 (most common): a cert-file-free eduroam with PEAP (or TTLS)
 
  

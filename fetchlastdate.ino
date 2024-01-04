@@ -32,7 +32,8 @@ bool checklastdate(const String& dt){           //check if last date on sheets i
         }
         
     }
-
+    Serial.println(lastdate);
+    Serial.println(dt);
     if(dt==lastdate){
       return true;
     }else{

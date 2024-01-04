@@ -1,8 +1,5 @@
 bool wifi()
-{ WiFi.mode(WIFI_STA);
-
-  
-  
+{ 
   String uid,name,password ;
    String fileName="/WIFI_WPA2_Enterprise.txt";
    File dataFile;

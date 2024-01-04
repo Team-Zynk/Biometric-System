@@ -54,7 +54,7 @@ void saver(){
       m=checklastdate(date);
     }
     bool taskComplete = false;
-    int k=0;
+
     if(!m){
     while(!taskComplete){
     bool ready = GSheet.ready();
@@ -81,51 +81,14 @@ void saver(){
         
     }
     }
-    taskComplete=false;
-    
-    while(!taskComplete){
-      bool ready = GSheet.ready();
-    if (ready && !taskComplete)
-    { FirebaseJson response;
-        // Instead of using FirebaseJson for response, you can use String for response to the functions
-        // especially in low memory device that deserializing large JSON response may be failed as in ESP8266
-       String s="Sheet1!"+stringgen(daynum+3)+String(k+2);
-        FirebaseJson valueRange;
-        valueRange.add("majorDimension", "ROWS");
-        valueRange.set("values/[0]/[0]","A");
-        // valueRange.set("values/[0]/[1]", "A");
-        // valueRange.set("values/[0]/[2]", "A");
-        // valueRange.set("values/[0]/[3]", "A");
-        // valueRange.set("values/[0]/[4]", "L");
-        // For Google Sheet API ref doc, go to https://developers.google.com/sheets/api/reference/rest/v4/spreadsheets.values/append
-
-        bool success = GSheet.values.append(&response /* returned response */, "1hfmKLyTc_rjSeS1E3KvEp9h04tVyG9RGldDozgvCun0" /* spreadsheet Id to append */, s /* range to append */, &valueRange /* data range to append */);
-        if (success){
-            k++;
-        }
-        
-        if(k==strength){
-          taskComplete=true;
-        }
-    }
-    }
     }else{
       m=false;
       daynum--;
     }
-
     taskComplete=false;
     
     String line = dataFile.readStringUntil('\n');
-    Serial.println(line);
-    String temp="";
-    int i=0;
-    while(i<line.length() && line[i]!=','){
-      temp=temp+String(line[i]);
-      i++;
-    }
-    i++;
-    k=temp.toInt();
+    
     while(!taskComplete){
       bool ready = GSheet.ready();
     if (ready && !taskComplete)
@@ -133,25 +96,18 @@ void saver(){
         // Instead of using FirebaseJson for response, you can use String for response to the functions
         // especially in low memory device that deserializing large JSON response may be failed as in ESP8266
         FirebaseJson valueRange; 
-       String s="Sheet1!"+stringgen(daynum+3)+String(k);
+       String s="Sheet1!"+stringgen(daynum+3)+String(1000);
+       String data=String(strength)+","+line;
         valueRange.add("majorDimension", "COLUMNS");
         valueRange.add("range", s);
-        valueRange.set("values/[0]/[0]","P");
-        Serial.println(i);
+        valueRange.set("values/[0]/[0]",data);
+        
         // For Google Sheet API ref doc, go to https://developers.google.com/sheets/api/reference/rest/v4/spreadsheets.values/append
         bool success = GSheet.values.update(&response /* returned response */, "1hfmKLyTc_rjSeS1E3KvEp9h04tVyG9RGldDozgvCun0" /* spreadsheet Id to append */, s /* range to append */, &valueRange /* data range to append */);
         if (success){
-            if(i>=line.length()-1){
+            
               taskComplete=true;
-            }
-            temp="";
-            while(i<line.length() && line[i]!=','){
-                  temp=temp+String(line[i]);
-                  i++;
-               }
-              i++;
-              k=temp.toInt();
-        
+            
         }
         }
     }

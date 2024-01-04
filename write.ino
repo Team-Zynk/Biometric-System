@@ -11,7 +11,13 @@ void write1(){
   String last_date="/"+(String)roll+"/"+"Last_Date"+".txt";
   dataFile = SD.open(last_date,FILE_READ);
   String line = dataFile.readStringUntil('\n');
+  line=line.substring(0,line.length()-1);
   dataFile.close();
+  Serial.print(line);
+  Serial.print(",");
+  Serial.print(present_date);
+  Serial.print(",");
+
   if(line==present_date)
   {tft.setCursor(40,160);
   tft.setTextColor(TFT_BLUE);
