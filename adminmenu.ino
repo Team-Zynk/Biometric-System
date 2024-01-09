@@ -1,6 +1,6 @@
 void adminmenu(){            //Admin  Access Window
   tft.fillScreen(TFT_WHITE);
-  drawSdJpeg("/iitlogo.jpg", 80, 40);
+  drawSdJpeg("/config/iitlogo.jpg", 80, 40);
   printer("Admin Access Window",0,10,3,480,TFT_BLUE);
   b1.displayall();
   uint16_t x,y; //Coordinates to detect touch position;
@@ -24,9 +24,7 @@ void adminmenu(){            //Admin  Access Window
       readadmin();    //Read attendance
       break;
    }else if(x1==2){
-
       saver();         //Save attendance file for total attendance
-      
       break;
    }else if(x1==3){
       if(roll!=127){

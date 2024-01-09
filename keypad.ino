@@ -25,5 +25,6 @@ int keypad(){
    tft.println(String(s));
    delay(200);
  }
+ tft.fillScreen(TFT_WHITE);
  return s;
 }

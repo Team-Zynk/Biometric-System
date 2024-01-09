@@ -1,8 +1,8 @@
 void admincheck(){
   File myfile;
-  myfile=SD.open("/admin.txt",FILE_APPEND);
+  myfile=SD.open("/config/admin.txt",FILE_APPEND);
   myfile.close();
-  myfile = SD.open("/admin.txt",FILE_READ);
+  myfile = SD.open("/config/admin.txt",FILE_READ);
     while (myfile.available() && k<10) {
       String line = myfile.readStringUntil('\n');
         int lineId = line.toInt();
@@ -15,19 +15,19 @@ void appoint(){
   int x=keypad();
   if(k<9 && roll==127){
   File myfile;
-  myfile=SD.open("/admin.txt",FILE_APPEND);
+  myfile=SD.open("/config/admin.txt",FILE_APPEND);
   myfile.print(x);
   myfile.println();
   myfile.close();
   admincheck();
-  tft.fillScreen(TFT_BLUE);
+  tft.fillScreen(TFT_WHITE);
   tft.setCursor(40,20);
   tft.setTextSize(3);
-  tft.setTextColor(TFT_WHITE);
-  tft.println("appointed #");
+  tft.setTextColor(TFT_BLUE);
+  tft.print("Appointed # ");
   tft.print(x);
   tft.setCursor(40,60);
-  tft.println("enjoy new tools");
+  tft.println("Enjoy new tools");
   delay(1000);
   }
   else{
@@ -37,7 +37,7 @@ void appoint(){
     tft.setTextColor(TFT_WHITE);
     tft.print("Can not appoint");
     tft.setCursor(40,60);
-    tft.println("admin");
+    tft.println("Admin");
     delay(1000);
   }
 }

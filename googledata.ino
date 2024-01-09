@@ -25,11 +25,12 @@ void google(){           //get student data from sheet
     tft.print("Could not connect");
     delay(700);
   }else{
-    String fileName=String("/")+String("stdinfo")+String(".txt");
+    configTime(19800,0,"pool.ntp.org"); 
+    delay(500);
+    String fileName=String("/config/")+String("stdinfo")+String(".txt");
     File dataFile;
-    if(SD.exists(fileName)){
-    SD.remove(fileName);
-    }
+    if(!SD.exists(fileName)){
+
     dataFile=SD.open(fileName,FILE_APPEND);
     int k=0;
     uint16_t strength=0;
@@ -69,12 +70,13 @@ void google(){           //get student data from sheet
     WiFi.disconnect(true);
     WiFi.mode(WIFI_OFF);
     tftreset();
-    if(SD.exists("/strength.txt")){
-      SD.remove("/strength.txt");
+    if(SD.exists("/config/strength.txt")){
+      SD.remove("/config/strength.txt");
     }
-    dataFile=SD.open("/strength.txt",FILE_APPEND);
+    dataFile=SD.open("/config/strength.txt",FILE_APPEND);
     dataFile.print(String(strength-1));
     dataFile.close();
+    
     tft.fillScreen(TFT_WHITE);
     tft.setTextColor(TFT_BLUE);
     tft.setTextSize(3);
@@ -83,5 +85,14 @@ void google(){           //get student data from sheet
     tft.setCursor(40,110);
     tft.print("Succesfully");
     delay(1000);
+    }else{
+    tftreset();
+    tft.fillScreen(TFT_WHITE);
+    tft.setTextColor(TFT_BLUE);
+    tft.setTextSize(3);
+    tft.setCursor(40,60);
+    tft.print("Database Found");
+    delay(1000);
+    }
   }
   }

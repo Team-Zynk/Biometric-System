@@ -5,7 +5,6 @@ void write1(){
   struct tm timeinfo;
   getLocalTime(&timeinfo);
   SD.mkdir("/"+(String)roll);
- 
   String fileName="/"+(String)roll+"/"+"Dates_Present"+".txt"; //Directory of Roll No. with file name as Dates Present
   String present_date = String(timeinfo.tm_mday) + "/"+String(1900+timeinfo.tm_year)+"/" + String(1+timeinfo.tm_mon);
   String last_date="/"+(String)roll+"/"+"Last_Date"+".txt";

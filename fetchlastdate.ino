@@ -1,6 +1,6 @@
 bool checklastdate(const String& dt){           //check if last date on sheets is same as current  
     File dataFile;
-    dataFile=SD.open("/daynum.txt",FILE_READ);
+    dataFile=SD.open("/config/daynum.txt",FILE_READ);
     uint16_t daynum=0;
     while(dataFile.available()){
     String line = dataFile.readStringUntil('\n');
@@ -23,7 +23,7 @@ bool checklastdate(const String& dt){           //check if last date on sheets i
             {
                 FirebaseJson::IteratorValue value = response.valueAt(i);
                 lastdate=value.value.c_str();
-                lastdate=lastdate.substring(1,s.length()-1);
+                lastdate=lastdate.substring(1,lastdate.length()-1);
             }
             response.iteratorEnd();
             if(success){
@@ -33,7 +33,9 @@ bool checklastdate(const String& dt){           //check if last date on sheets i
         
     }
     Serial.println(lastdate);
+    delay(500);
     Serial.println(dt);
+    delay(500);
     if(dt==lastdate){
       return true;
     }else{

@@ -27,6 +27,7 @@ while (dataFile.available())
   }
   if(WiFi.status() == WL_CONNECTED){
    dataFile.close();
+   Serial.println("Connected to wpa2");
    return true;
   }
   

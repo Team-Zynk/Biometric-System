@@ -4,7 +4,7 @@ void pending(){
   getLocalTime(&timeinfo);
   String date = String(timeinfo.tm_mday)+"/"+String(1+timeinfo.tm_mon)+"/"+String(1900+timeinfo.tm_year)+",";
   
-  String fileName="/"+String("pending")+".txt";
+  String fileName="/config/"+String("pending")+".txt";
   bool m=SD.exists(fileName);
   dataFile = SD.open(fileName,FILE_READ);
   bool f=false;

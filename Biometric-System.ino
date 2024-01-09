@@ -198,7 +198,7 @@ tft.print(txt);
 
 void HomeScreen(){  // The Homescreen for the attendance system
 tft.fillScreen(TFT_WHITE);
-drawSdJpeg("/c_logo.jpg", 0, 0);  //The Background image
+drawSdJpeg("/config/c_logo.jpg", 0, 0);  //The Background image
 printer("Designed & Developed by",0,10,2,480,TFT_BLACK);
 Forcetime();
 }
@@ -235,7 +235,7 @@ void setup() {
     return;
   }
 
-   drawSdJpeg("/iitlogo.jpg", 80, 60);  // This draws a jpeg pulled off the SD Card
+   drawSdJpeg("/config/iitlogo.jpg", 80, 60);  // This draws a jpeg pulled off the SD Card
    printer("INITIALIZATION",0,10,3,480,TFT_BLUE);
    for(int i=0;i<3;i++){
     tft.print(". ");
@@ -261,11 +261,11 @@ void setup() {
 
   finger.getTemplateCount();  //get number of fingerprints stored
 
-   if(!SD.exists("/on.txt")){
+   if(!SD.exists("/config/on.txt")){
    roll=127;
    while (!getFingerprintEnroll()){};
    File file;
-   file=SD.open("/on.txt",FILE_WRITE);
+   file=SD.open("/config/on.txt",FILE_WRITE);
    file.close();
   }
   admincheck();
@@ -280,13 +280,13 @@ void setup() {
    delay(1000);
   }
 
-  if(!SD.exists("/daynum.txt")){       //Initialize number of days file
+  if(!SD.exists("/config/daynum.txt")){       //Initialize number of days file
     File dataFile=SD.open("/daynum.txt",FILE_APPEND);
     dataFile.print("0");
     dataFile.close();
   }
 
-  if(!SD.exists("/strength.txt")){       //Initialize strength file
+  if(!SD.exists("/config/strength.txt")){       //Initialize strength file
     File dataFile=SD.open("/strength.txt",FILE_APPEND);
     dataFile.print("0");
     dataFile.close();
@@ -313,13 +313,8 @@ void setup() {
   //     break;
   //   }
   // }
-  if(wifi()){
-  configTime(19800,0,"pool.ntp.org");    //Get time from the server
-  WiFi.disconnect(true);
-  WiFi.mode(WIFI_OFF);
-  
-  }
-  tftreset();
+     //Get time from the server
+ 
 
   //Insert all buttons
 
