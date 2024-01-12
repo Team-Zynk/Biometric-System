@@ -1,9 +1,7 @@
 void google(){           //get student data from sheet
    tft.fillScreen(TFT_WHITE);
-   tft.setTextColor(TFT_BLUE);
-   tft.setTextSize(3);
-   tft.setCursor(40,10);
-   tft.print("Connecting to WiFi");
+   printer("Connecting",0,228,3,480,TFT_BLUE);
+   drawSdJpeg("/config/wlogo.jpg", 176, 50);
   //  WiFi.begin("Xiaomi 11T Pro","nahi pata");
   //  int counter =0;
   // while (WiFi.status() != WL_CONNECTED) {
@@ -26,7 +24,7 @@ void google(){           //get student data from sheet
     delay(700);
   }else{
     configTime(19800,0,"pool.ntp.org"); 
-    delay(500);
+    delay(2000);
     String fileName=String("/config/")+String("stdinfo")+String(".txt");
     File dataFile;
     if(!SD.exists(fileName)){
@@ -76,22 +74,15 @@ void google(){           //get student data from sheet
     dataFile=SD.open("/config/strength.txt",FILE_APPEND);
     dataFile.print(String(strength-1));
     dataFile.close();
-    
     tft.fillScreen(TFT_WHITE);
-    tft.setTextColor(TFT_BLUE);
-    tft.setTextSize(3);
-    tft.setCursor(40,60);
-    tft.print("Database Updated");
-    tft.setCursor(40,110);
-    tft.print("Succesfully");
+    printer("Database Updated",0,10,3,480,TFT_BLUE);
+    drawSdJpeg("/config/dlogo.jpg", 176, 70);
     delay(1000);
     }else{
     tftreset();
     tft.fillScreen(TFT_WHITE);
-    tft.setTextColor(TFT_BLUE);
-    tft.setTextSize(3);
-    tft.setCursor(40,60);
-    tft.print("Database Found");
+    printer("Database Found",0,10,3,480,TFT_BLUE);
+    drawSdJpeg("/config/dlogo.jpg", 176, 70);
     delay(1000);
     }
   }

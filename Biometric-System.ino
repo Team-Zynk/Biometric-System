@@ -195,14 +195,20 @@ tft.setCursor(x+(ln-(tft.textWidth(txt)))/2,y);
 tft.print(txt);
 }
 
+unsigned long startMillis;  //some global variables available anywhere in the program
+unsigned long currentMillis;
 
 void HomeScreen(){  // The Homescreen for the attendance system
 tft.fillScreen(TFT_WHITE);
 drawSdJpeg("/config/c_logo.jpg", 0, 0);  //The Background image
 printer("Designed & Developed by",0,10,2,480,TFT_BLACK);
+startMillis = millis();
+currentMillis=startMillis;
 Forcetime();
 }
 
+
+bool aru=true;
 Adafruit_Fingerprint finger = Adafruit_Fingerprint(&SerialPort); //Serialport 2 given to fingerprint 
 void setup() {
   // put your setup code here, to run once:
@@ -212,6 +218,7 @@ void setup() {
   digitalWrite(22, HIGH); 
   digitalWrite(15, HIGH);
   digitalWrite( 5, HIGH);
+
   WiFi.disconnect(true);   //Disconnect wifi
   WiFi.mode(WIFI_OFF);
   tftreset();
@@ -249,6 +256,7 @@ void setup() {
   delay(100); 
   if (finger.verifyPassword()) {
    tft.fillScreen(TFT_WHITE);
+   drawSdJpeg("/config/blogo.jpg", 176, 160);
    printer("Found Fingerprint Sensor",10,10,3,460,TFT_BLUE);
    delay(500);
   } else {
@@ -281,13 +289,13 @@ void setup() {
   }
 
   if(!SD.exists("/config/daynum.txt")){       //Initialize number of days file
-    File dataFile=SD.open("/daynum.txt",FILE_APPEND);
+    File dataFile=SD.open("/config/daynum.txt",FILE_APPEND);
     dataFile.print("0");
     dataFile.close();
   }
 
   if(!SD.exists("/config/strength.txt")){       //Initialize strength file
-    File dataFile=SD.open("/strength.txt",FILE_APPEND);
+    File dataFile=SD.open("/config/strength.txt",FILE_APPEND);
     dataFile.print("0");
     dataFile.close();
   }
@@ -340,20 +348,37 @@ void setup() {
   printer("INITIALIZATION",0,60,4,480,TFT_BLUE);
   printer("FINISHED",0,120,4,480,TFT_BLUE);
   delay(1000);
+  
   HomeScreen();
 }
 void loop() {
    printLocalTime();
+   currentMillis = millis();
    roll=getFingerprintID(); 
    if(roll!=-1){
+    startMillis=millis();
     if(checkmore()){
       adminmenu();
     }else{
     write1();
     }
     HomeScreen();
+    roll=-1; 
+   }else{
+    if(currentMillis-startMillis >= 10000){
+      uint16_t x,y;
+       tft.sleep(true); 
+       aru=true;   
+      if(Touched(false,&x,&y)){
+        tft.sleep(false);
+        aru=false;
+        startMillis=millis();
+       currentMillis=startMillis;
+      }
+       
+    }
    }
-   roll=-1;      
+        
 }
 
 int getFingerprintID() {
@@ -364,33 +389,27 @@ int getFingerprintID() {
   if (p != FINGERPRINT_OK)  return -1;
 
   p = finger.fingerFastSearch();
+  if(aru){
+  tft.sleep(false);
+  startMillis=millis();
+  currentMillis=startMillis;
+  aru=false;
+  }
   if (p != FINGERPRINT_OK){
      tft.fillScreen(TFT_WHITE);
-     tft.setCursor(40,20);
-     tft.setTextSize(4);
-     tft.setTextColor(TFT_RED);
-     tft.setCursor(40,120);
-     tft.println(F("Did Not Match"));
-     delay(1000); 
+     drawSdJpeg("/config/dnmlogo.jpg", 176, 20);
+     printer("Did Not Match",0,200,4,480,TFT_RED);
+     delay(500); 
      HomeScreen();
      return -1;
   }
   
   tft.fillScreen(TFT_WHITE);
   tft.setCursor(40,10);
-  tft.setTextColor(TFT_BLUE);
-  tft.setTextSize(2);
-  tft.print(F("Found ID Number "));
-  tft.print(finger.fingerID);
-  String s=getdata(finger.fingerID);
-  tft.setCursor(40,60);
-  tft.print(F("Name: "));
-  tft.print(s.substring(1,s.indexOf(",")-1));
-  tft.setCursor(40,110);
-  tft.print(F("Entry Number: "));
-  Serial.println();
-  tft.print(s.substring(s.indexOf(",")+2,s.length()-2));
-  delay(1000);  
+  
+  // tft.print(F("Found ID Number "));
+  // tft.print(finger.fingerID);
+  
   return finger.fingerID;
 }
 
@@ -406,3 +425,4 @@ void tftreset(){             //Reset pinmodes of tft after wifi connection break
     pinMode(TFT_D6, OUTPUT); digitalWrite(TFT_D6, HIGH);
     pinMode(TFT_D7, OUTPUT); digitalWrite(TFT_D7, HIGH);
 }
+

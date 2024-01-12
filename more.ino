@@ -85,6 +85,7 @@ bool getFingerprintEnroll() {
   tft.setTextSize(3);
   tft.setTextColor(TFT_BLUE);
   tft.print(F("Waiting"));
+  drawSdJpeg("/config/wtlogo.jpg", 176, 70);
   tft.setCursor(40,60);
   while (p != FINGERPRINT_OK) {
     p = finger.getImage();
@@ -162,6 +163,7 @@ bool getFingerprintEnroll() {
   p = finger.createModel();
   if (p == FINGERPRINT_OK) {
     tft.print(F("Prints matched!"));
+    drawSdJpeg("/config/pmlogo.jpg", 176, 70);
     delay(1000);
   } else if (p == FINGERPRINT_PACKETRECIEVEERR) {
     tft.print(F("Communication error"));

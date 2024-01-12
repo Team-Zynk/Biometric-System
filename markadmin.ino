@@ -1,11 +1,11 @@
 void markadmin(){  
-  tft.fillScreen(TFT_BLUE);
+  tft.fillScreen(TFT_WHITE);
   tft.setCursor(40,10);
   tft.setTextSize(3);
-  tft.setTextColor(TFT_WHITE);
-  tft.println(F("Input the ID"));
+  tft.setTextColor(TFT_BLUE);
+  tft.println(F("Type ID number"));
   tft.setCursor(40,60);
-  tft.println("On the Keypad");
+  tft.println("On Keypad");
   delay(2000);
   roll=keypad();
   write1();

@@ -20,7 +20,8 @@ void saver(){
    dataFile.close();
    String fileName = "/config/"+String("pending") + ".txt"; 
    if(SD.exists(fileName)){
-   tft.print("Connecting to WiFi");
+   printer("Connecting",0,228,3,480,TFT_BLUE);
+   drawSdJpeg("/config/wlogo.jpg", 176, 50);
     
   //  WiFi.begin("Xiaomi 11T Pro","nahi pata");
   //  int counter =0;

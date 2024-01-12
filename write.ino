@@ -1,6 +1,16 @@
 void write1(){
-
- 
+  tft.setTextColor(TFT_BLUE);
+  tft.setTextSize(2);
+  drawSdJpeg("/config/tlogo.jpg", 176, 20);
+  String s=getdata(roll);
+  tft.setCursor(40,160);
+  tft.print(F("Name: "));
+  tft.print(s.substring(1,s.indexOf(",")-1));
+  tft.setCursor(40,210);
+  tft.print(F("Entry Number: "));
+  Serial.println();
+  tft.print(s.substring(s.indexOf(",")+2,s.length()-2));
+  delay(1000);  
   File dataFile;
   struct tm timeinfo;
   getLocalTime(&timeinfo);
@@ -48,10 +58,11 @@ void write1(){
   dataFile=SD.open(fileName,FILE_APPEND);
   dataFile.println(present_days);
   dataFile.close();
-  tft.setCursor(40,160);
+  tft.setCursor(40,260);
   tft.setTextColor(TFT_BLUE);
   tft.setTextSize(3);
   tft.println("Attendance Marked");
+  drawSdJpeg("/config/t1logo.jpg", 392, 186);
   delay(1000);
   tft.fillScreen(TFT_WHITE);
   read1();

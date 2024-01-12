@@ -1,5 +1,9 @@
 void adminmenu(){            //Admin  Access Window
   tft.fillScreen(TFT_WHITE);
+  printer("Welcome Admin",0,200,3,480,TFT_BLUE);
+  drawSdJpeg("/config/admlogo.jpg", 176, 20);
+  delay(1000);
+  tft.fillScreen(TFT_WHITE);
   drawSdJpeg("/config/iitlogo.jpg", 80, 40);
   printer("Admin Access Window",0,10,3,480,TFT_BLUE);
   b1.displayall();
