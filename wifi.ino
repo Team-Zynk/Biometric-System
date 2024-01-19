@@ -5,18 +5,30 @@ bool wifi()
    File dataFile;
    WiFi.disconnect(true);
    WiFi.mode(WIFI_STA);
+    int n = WiFi.scanNetworks();
     int counter=0;
+    bool flag;
    if(SD.exists(fileName)){
    dataFile = SD.open(fileName,FILE_READ);
+   flag = false;
 while (dataFile.available())
 {   
-   
      uid = dataFile.readStringUntil('\n');
      uid=uid.substring(0,uid.length()-1);
      name = dataFile.readStringUntil('\n');
      name=name.substring(0,name.length()-1);
     password = dataFile.readStringUntil('\n');
-    WiFi.begin(uid.c_str(), WPA2_AUTH_PEAP,"", name.c_str(),password.c_str());
+    flag =false;
+    for(int i=0;i<n;i++)
+    {
+      if(uid==WiFi.SSID(i))
+      {
+       flag =true;
+       break;
+      }
+    }
+   if (flag==true )
+   { WiFi.begin(uid.c_str(), WPA2_AUTH_PEAP,"", name.c_str(),password.c_str());
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(".");
@@ -29,7 +41,7 @@ while (dataFile.available())
    dataFile.close();
    Serial.println("Connected to wpa2");
    return true;
-  }
+  } }
   
 }
   
@@ -50,8 +62,19 @@ while (dataFile.available())
     Serial.print(",");
     Serial.print(password);
     WiFi.disconnect(true);
-   WiFi.mode(WIFI_STA);
-    WiFi.begin(uid.c_str(),password.c_str());
+    WiFi.mode(WIFI_STA);
+    n = WiFi.scanNetworks();
+    flag =false;
+    for(int i=0;i<n;i++)
+    {
+      if(uid==WiFi.SSID(i))
+      {
+       flag =true;
+       break;
+      }
+    }
+   if (flag==true )
+  {  WiFi.begin(uid.c_str(),password.c_str());
    while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(".");
@@ -65,7 +88,7 @@ while (dataFile.available())
      return true;
   }
     
-}
+}}
 
 dataFile.close();
 }

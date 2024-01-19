@@ -1,7 +1,8 @@
 void write1(){
+  tft.fillScreen(TFT_WHITE);
   tft.setTextColor(TFT_BLUE);
   tft.setTextSize(2);
-  drawSdJpeg("/config/tlogo.jpg", 176, 20);
+  drawSdJpeg("/config/pmlogo.jpg", 176, 20);
   String s=getdata(roll);
   tft.setCursor(40,160);
   tft.print(F("Name: "));
@@ -28,7 +29,7 @@ void write1(){
   Serial.print(",");
 
   if(line==present_date)
-  {tft.setCursor(40,160);
+  {tft.setCursor(40,260);
   tft.setTextColor(TFT_BLUE);
   tft.setTextSize(3);
   tft.println("Already Marked");
@@ -57,6 +58,10 @@ void write1(){
   SD.remove(fileName);
   dataFile=SD.open(fileName,FILE_APPEND);
   dataFile.println(present_days);
+  dataFile.close();
+  fileName="/"+(String)roll+"/"+"Score.txt";
+  dataFile=SD.open(fileName,FILE_APPEND);
+  dataFile.println(score);
   dataFile.close();
   tft.setCursor(40,260);
   tft.setTextColor(TFT_BLUE);

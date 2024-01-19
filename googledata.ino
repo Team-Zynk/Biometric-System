@@ -13,7 +13,7 @@ void google(){           //get student data from sheet
   //   }
   // }
   // //hi
-  
+  if(!SD.exists("/config/stdinfo.txt")){
   if(!wifi()){
     tftreset();
     tft.fillScreen(TFT_WHITE);
@@ -23,8 +23,6 @@ void google(){           //get student data from sheet
     tft.print("Could not connect");
     delay(700);
   }else{
-    configTime(19800,0,"pool.ntp.org"); 
-    delay(2000);
     String fileName=String("/config/")+String("stdinfo")+String(".txt");
     File dataFile;
     if(!SD.exists(fileName)){
@@ -86,4 +84,11 @@ void google(){           //get student data from sheet
     delay(1000);
     }
   }
+  }else{
+    tftreset();
+    tft.fillScreen(TFT_WHITE);
+    printer("Database Found",0,10,3,480,TFT_BLUE);
+    drawSdJpeg("/config/dlogo.jpg", 176, 70);
+    delay(1000);
   }
+}

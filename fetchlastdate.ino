@@ -37,6 +37,10 @@ bool checklastdate(const String& dt){           //check if last date on sheets i
     Serial.println(dt);
     delay(500);
     if(dt==lastdate){
+      SD.remove("/config/delta.txt");
+      dataFile=SD.open("/config/delta.txt",FILE_APPEND);
+      dataFile.print("0");
+      dataFile.close();
       return true;
     }else{
       return false;
