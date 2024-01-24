@@ -3,15 +3,12 @@ bool gettime(struct tm & oldtime){
   drawSdJpeg("/config/timelogo.jpg", 176, 130);
    printer("Fetching time from server",0,10,3,480,TFT_BLUE);
   if(wifi()){
-    delay(500);
     unsigned long st;
     int ctr=0;
-    while(!getLocalTime(&oldtime) && ctr<100){
+    while(!getLocalTime(&oldtime,5000) && ctr<3){
     configTime(19800,0,"pool.ntp.org");
     Serial.print(". ");
     ctr++; 
-    st=millis();
-    while(millis()-st<200){}
     }
     WiFi.disconnect(true);
     WiFi.mode(WIFI_OFF);

@@ -166,6 +166,22 @@ void Forcetime(){
   tft.setTextColor(TFT_BLACK);
   tft.fillRect(60,280,480,20,TFT_WHITE);
   tft.println(&timeinfo, "%A, %B %d %Y %H:%M");
+  tft.fillRect(410,10,60,15,TFT_WHITE);
+  float val=(analogRead(34)-2000)/288;
+  uint16_t batteryColor = tft.color565(73,int(255*val), 0);
+   if(100*val>60){
+    batteryColor = tft.color565(0, 255, 0);
+  }else if(100*val>30){
+     batteryColor = tft.color565(255, 255, 0);
+  }else{
+     batteryColor = tft.color565(255, 0, 0);
+  }
+  tft.drawRoundRect(410,10,30,15,2,TFT_BLACK);
+  tft.fillRect(412,11,int(26*val),13,batteryColor);
+  tft.setTextSize(1);
+  tft.setCursor(445,13);
+  tft.setTextColor(TFT_BLACK);
+  tft.print(String(int(100*(val)))+"%");
 }
 void printLocalTime() //print the local time once sync with wifi
 { tft.setTextSize(2);
@@ -180,6 +196,22 @@ void printLocalTime() //print the local time once sync with wifi
   tft.fillRect(60,280,480,20,TFT_WHITE);
   tft.println(&timeinfo, "%A, %B %d %Y %H:%M");
   oldtime=timeinfo;
+  float val=(analogRead(34)-2000)/288;
+  uint16_t batteryColor = tft.color565(73, int(255*(val)), 0);
+  if(100*val>60){
+    batteryColor = tft.color565(0, 255, 0);
+  }else if(100*val>30){
+     batteryColor = tft.color565(255, 255, 0);
+  }else{
+     batteryColor = tft.color565(255, 0, 0);
+  }
+  tft.fillRect(410,10,60,15,TFT_WHITE);
+  tft.drawRoundRect(410,10,30,15,2,TFT_BLACK);
+  tft.fillRect(412,11,int(26*val),13,batteryColor);
+  tft.setTextSize(1);
+  tft.setCursor(445,13);
+  tft.setTextColor(TFT_BLACK);
+  tft.print(String(int(100*(val)))+"%");
   }
 }
 
@@ -247,6 +279,7 @@ void setup() {
     return;
   }
 
+
    drawSdJpeg("/config/iitlogo.jpg", 80, 60);  // This draws a jpeg pulled off the SD Card
    printer("INITIALIZATION",0,10,3,480,TFT_BLUE);
    for(int i=0;i<3;i++){
@@ -254,6 +287,17 @@ void setup() {
     delay(500);
    }
   delay(500);  
+  tft.fillScreen(TFT_WHITE);
+  // int k=0;
+  // while(true){
+  //   tft.println(analogRead(34));
+  //   delay(500);
+  //   k=(k+1)%6;
+  //   if(k>=5){
+  //     tft.fillScreen(TFT_WHITE);
+  //     tft.setCursor(0,0);
+  //   }
+  // }
   
   finger.begin(57600);     // set the data rate for the sensor serial port
 
@@ -271,7 +315,7 @@ void setup() {
     return;
   }
 
-  finger.getTemplateCount();  //get number of fingerprints stored
+  
 
    if(!SD.exists("/config/on.txt")){
    roll=127;
@@ -281,12 +325,11 @@ void setup() {
    file.close();
   }
   admincheck();
-
+  finger.getTemplateCount();  //get number of fingerprints stored
   while(finger.templateCount == 0){
    printer("Did not find",10,60,3,460,TFT_BLUE);
    printer("Any fingerprint data",10,110,3,460,TFT_BLUE);
    delay(1000);
-    enroll();
   }
   
    printer(String(finger.templateCount)+" Fingerprints found",10,60,3,460,TFT_BLUE);
@@ -443,15 +486,15 @@ int getFingerprintID() {
 }
 
 void tftreset(){             //Reset pinmodes of tft after wifi connection breaks/ since they share common pins
-  pinMode(TFT_RD, OUTPUT);
-  digitalWrite(TFT_RD, HIGH);
-   pinMode(TFT_D0, OUTPUT); digitalWrite(TFT_D0, HIGH);
-    pinMode(TFT_D1, OUTPUT); digitalWrite(TFT_D1, HIGH);
-    pinMode(TFT_D2, OUTPUT); digitalWrite(TFT_D2, HIGH);
-    pinMode(TFT_D3, OUTPUT); digitalWrite(TFT_D3, HIGH);
-    pinMode(TFT_D4, OUTPUT); digitalWrite(TFT_D4, HIGH);
-    pinMode(TFT_D5, OUTPUT); digitalWrite(TFT_D5, HIGH);
-    pinMode(TFT_D6, OUTPUT); digitalWrite(TFT_D6, HIGH);
-    pinMode(TFT_D7, OUTPUT); digitalWrite(TFT_D7, HIGH);
+  // pinMode(TFT_RD, OUTPUT); digitalWrite(TFT_RD, HIGH);
+  //  pinMode(TFT_D0, OUTPUT); digitalWrite(TFT_D0, HIGH);
+    // pinMode(TFT_D1, OUTPUT); digitalWrite(TFT_D1, HIGH);
+    // pinMode(TFT_D2, OUTPUT); digitalWrite(TFT_D2, HIGH);
+    // pinMode(TFT_D3, OUTPUT); digitalWrite(TFT_D3, HIGH);
+    pinMode(TFT_D4, OUTPUT); 
+    // digitalWrite(TFT_D4, HIGH);
+    // pinMode(TFT_D5, OUTPUT); digitalWrite(TFT_D5, HIGH);
+    // pinMode(TFT_D6, OUTPUT); digitalWrite(TFT_D6, HIGH);
+    // pinMode(TFT_D7, OUTPUT); digitalWrite(TFT_D7, HIGH);
 }
 

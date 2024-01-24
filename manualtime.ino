@@ -46,8 +46,8 @@ void manualtime(struct tm & oldtime){
     b4.stk[i].bgc=TFT_WHITE;
     b4.stk[i].display();
     arr[i]=s;
-    s=0;
     i=k;
+    s=arr[i];
     b4.stk[i].bgc=TFT_BLUE;
     b4.stk[i].display();
    }

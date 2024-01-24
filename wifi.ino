@@ -30,10 +30,10 @@ while (dataFile.available())
    if (flag==true )
    { WiFi.begin(uid.c_str(), WPA2_AUTH_PEAP,"", name.c_str(),password.c_str());
   while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
+    delay(1500);
     Serial.print(".");
     counter++;
-    if(counter>=60){ //after 30 seconds timeout - reset board
+    if(counter>=10){ //after 15 seconds timeout - reset board
       break;
     }
   }
@@ -47,7 +47,7 @@ while (dataFile.available())
   
    dataFile.close();
    }
-
+flag =false;
 fileName="/WIFI.txt";
  if(SD.exists(fileName)){
   dataFile = SD.open(fileName,FILE_READ);
@@ -76,10 +76,10 @@ while (dataFile.available())
    if (flag==true )
   {  WiFi.begin(uid.c_str(),password.c_str());
    while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
+    delay(1500);
     Serial.print(".");
     counter++;
-    if(counter>=60){ //after 30 seconds timeout - reset board
+    if(counter>=10){ //after 30 seconds timeout - reset board
       break;
     }
   }

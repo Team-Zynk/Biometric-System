@@ -6,7 +6,14 @@ void reset(){
    printer("Place his finger",0,200,3,480,TFT_BLUE);
    printer("For authentication",0,260,3,480,TFT_BLUE);
    while(roll!=127){
-      roll=getFingerprintID();
+      uint8_t p = finger.getImage();
+      if (p != FINGERPRINT_OK)  continue;
+
+      p = finger.image2Tz();
+      if (p != FINGERPRINT_OK)  continue;
+
+      p = finger.fingerFastSearch();
+      roll=finger.fingerID;
    } 
   }
   if(!confirmation("To erase all data")){return;}
@@ -27,7 +34,7 @@ void deleteAllFiles()
     if (!next)
       break;
     next.close();
-    SD.remove(next.name());
+    SD.remove("/"+String(i)+"/"+next.name());
   }
   dataFile.close();
  }
